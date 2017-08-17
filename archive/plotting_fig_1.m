@@ -49,7 +49,8 @@ title('Normalized flux vs. k_{on}')
 
 %% Flux ratio vs Nt for fixed DB, at several KDs
 % For Fig. 1 of paper (no functional form of Dtilde)
-
+fontsize = 18;
+fs = 18;
 % Re-dimensionalize without functional form of DB
 flux_3 = subs(subs(subs(flux_2, DB, (DB/(koff))),...
     gam, kon*Nt/koff), DF, D/(koff));
