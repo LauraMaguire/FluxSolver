@@ -21,6 +21,7 @@ r.dPre = zeros(1,l); % for predicted Deff using koff and kon above
 r.kd = zeros(1,l); % for calculated Kd (from koff and kon above)
 r.dPost = zeros(1,l); % for Deff calculated from simulation
 r.dErr = zeros(1,l); % for error in calculated Deff
+r.db = zeros(1,l);
 r.hopOverageFreq = zeros(1,l); % for hopping overage frequency
 
 r.params = cell(1,l); % for parameters needed for flux calculation
@@ -42,6 +43,11 @@ for k=1:l
         r.hopOverageFreq(k) = 0;
     end
     
+    % Extract bound diffusion coefficient from dPost.
+    r.dBound(k) = (r.dPost(k) - data.results.pfCalc*data.paramOut.D)/...
+        (1-data.results.pfCalc);
+    
+    % Fill in params structure for subNum function.
     r.params{k} = struct();
     r.params{k}.DF = data.paramOut.D;
     r.params{k}.Nt = data.paramOut.Nt;
@@ -50,8 +56,7 @@ for k=1:l
     r.params{k}.kon = r.kon(k);
     r.params{k}.koff = r.koff(k);
     r.params{k}.ll = data.paramOut.lc*data.paramOut.lp;
-    r.params{k}.DB = 1; %placeholder - change
-end
+    r.params{k}.DB = r.dBound(k);
 
 if plotFlag == 0
     close all

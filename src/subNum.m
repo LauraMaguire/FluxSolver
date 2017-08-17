@@ -1,6 +1,16 @@
 function [bindFlux, nonbindFlux] = subNum(params,tetherFlag)
+% subNum substitutes numbers into the symbolic flux expression found with
+% fluxSolver.
+% Inputs:
+%   1) params: numbers corresponding to the necessary parameters
+%   2) tetherFlag: 1 means "use tethered diffusion expression," 0 means
+%   "directly plug in a given value for bound diffusion coefficient."
+% Outputs:
+%   1) bindFlux: the numerical flux value when binding is allowed.
+%   2) nonbindFlux: the numerical flux value when binding is not allowed.
 
-syms symflux gam lam alph real
+% Define necessary symbolic variables.
+syms symflux gam alph real
 syms DF AB Nt L DB kon koff ll real
 
 % Begin with fully-symbolic expression for flux.
@@ -12,22 +22,22 @@ symflux = (AB*(DF+DB*gam)^(3/2)*(exp((L*(DF+DB*gam)^(1/2))/(DB^(1/2)*DF^(1/2)))+
     DB*L*gam*exp((L*(DF + DB*gam)^(1/2))/(DB^(1/2)*DF^(1/2)))*(DF + DB*gam)^(1/2));
 
 % Replace gam with kon*Nt/koff
-symflux = simplify(subs(symflux, gam, kon*Nt/koff));
+symflux = subs(symflux, gam, kon*Nt/koff);
 
 % Put flux expression fully into dimensional terms
-symflux = simplify(subs(symflux, DB, DB/koff));
+symflux = subs(symflux, DB, DB/koff);
 symflux = simplify(subs(symflux, DF, DF/koff));
 
 % Substitute numerical values for AB, L, and Nt.
-symflux = simplify(subs(symflux, AB, params.AB));
-symflux = simplify(subs(symflux, L, params.L));
+symflux = subs(symflux, AB, params.AB);
+symflux = subs(symflux, L, params.L);
 symflux = simplify(subs(symflux, Nt, params.Nt));
 
 % tetherFlag determines whether tethered-model expression for DB is used.
 if tetherFlag ==1
     % Replace DB with analytic expression from tether model.
-    symflux = simplify(subs(symflux, DB, (DF*alph)/((alph+3*DF)*koff)));
-    symflux = simplify(subs(symflux, alph, ll*koff));
+    symflux = subs(symflux, DB, (DF*alph)/((alph+3*DF)*koff));
+    symflux = subs(symflux, alph, ll*koff);
     % Substitute a numerical value for ll
     symflux = simplify(subs(symflux, ll, params.ll));
     
@@ -37,8 +47,8 @@ else
 end
 
 % Finally, replace koff and DF.
-symflux = simplify(subs(symflux, koff, params.koff));
-symflux = simplify(subs(symflux, DF, params.DF));
+symflux = subs(symflux, koff, params.koff);
+symflux = subs(symflux, DF, params.DF);
 
 % Flux with binding: replace kon with numerical value.
 symfluxb = simplify(subs(symflux, kon, params.kon)); % substitute for kon
