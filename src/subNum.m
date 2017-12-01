@@ -11,21 +11,23 @@ function [bindFlux, nonbindFlux] = subNum(params,tetherFlag)
 
 % Define necessary symbolic variables.
 syms symflux gam alph real
-syms DF AB Nt L DB kon koff ll real
+syms DF AB Nt L DBb kon koff ll real
 
 % Begin with fully-symbolic expression for flux.
-symflux = (AB*(DF+DB*gam)^(3/2)*(exp((L*(DF+DB*gam)^(1/2))/(DB^(1/2)*DF^(1/2)))+1))/...
-    (L*(DF + DB*gam)^(3/2) - 2*DB^(3/2)*DF^(1/2)*gam + ...
-    L*exp((L*(DF+DB*gam)^(1/2))/(DB^(1/2)*DF^(1/2)))*(DF+DB*gam)^(3/2)-...
-    DB*L*gam*(DF + DB*gam)^(1/2) + ...
-    2*DB^(3/2)*DF^(1/2)*gam*exp((L*(DF+DB*gam)^(1/2))/(DB^(1/2)*DF^(1/2)))-...
-    DB*L*gam*exp((L*(DF + DB*gam)^(1/2))/(DB^(1/2)*DF^(1/2)))*(DF + DB*gam)^(1/2));
+%symflux = (AB*(DF+DBb*gam)^(3/2)*(exp((L*(DF+DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2)))+1))/...
+%    (L*(DF + DBb*gam)^(3/2) - 2*DBb^(3/2)*DF^(1/2)*gam + ...
+%    L*exp((L*(DF+DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2)))*(DF+DBb*gam)^(3/2)-...
+%    DBb*L*gam*(DF + DBb*gam)^(1/2) + ...
+%    2*DBb^(3/2)*DF^(1/2)*gam*exp((L*(DF+DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2)))-...
+%    DBb*L*gam*exp((L*(DF + DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2)))*(DF + DBb*gam)^(1/2));
+
+symflux = (AB*(DF + DBb*gam)^(3/2)*(exp((L*(DF + DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2))) + 1))/(L*(DF + DBb*gam)^(3/2) - 2*DBb^(3/2)*DF^(1/2)*gam + L*exp((L*(DF + DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2)))*(DF + DBb*gam)^(3/2) - DBb*L*gam*(DF + DBb*gam)^(1/2) + 2*DBb^(3/2)*DF^(1/2)*gam*exp((L*(DF + DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2))) - DBb*L*gam*exp((L*(DF + DBb*gam)^(1/2))/(DBb^(1/2)*DF^(1/2)))*(DF + DBb*gam)^(1/2));
 
 % Replace gam with kon*Nt/koff
 symflux = subs(symflux, gam, kon*Nt/koff);
 
 % Put flux expression fully into dimensional terms
-symflux = subs(symflux, DB, DB/koff);
+symflux = subs(symflux, DBb, DBb/koff);
 symflux = simplify(subs(symflux, DF, DF/koff));
 
 % Substitute numerical values for AB, L, and Nt.
@@ -33,17 +35,17 @@ symflux = subs(symflux, AB, params.AB);
 symflux = subs(symflux, L, params.L);
 symflux = simplify(subs(symflux, Nt, params.Nt));
 
-% tetherFlag determines whether tethered-model expression for DB is used.
+% tetherFlag determines whether tethered-model expression for DBb is used.
 if tetherFlag ==1
-    % Replace DB with analytic expression from tether model.
-    symflux = subs(symflux, DB, (DF*alph)/((alph+3*DF)*koff));
+    % Replace DBb with analytic expression from tether model.
+    symflux = subs(symflux, DBb, (DF*alph)/(alph+3*DF));
     symflux = subs(symflux, alph, ll*koff);
     % Substitute a numerical value for ll
     symflux = simplify(subs(symflux, ll, params.ll));
     
 else
-    % Directly substitute a numerical value for DB
-    symflux = simplify(subs(symflux, DB, params.DB));
+    % Directly substitute a numerical value for DBb
+    symflux = simplify(subs(symflux, DBb, params.DB));
 end
 
 % Finally, replace koff and DF.

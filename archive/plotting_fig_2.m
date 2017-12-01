@@ -2,6 +2,8 @@
 % For Fig. 2 of paper (flexible linker form of DB used)
 % Does not incorporate koff2 (sliding koff)
 
+fontsize = 18;
+fs = 18;
 % Re-dimensionalize without koff2
 flux_3 = subs(subs(subs(subs(flux_2, DB, (D*alpha)/((alpha+3*D)*koff)),...
     alpha, ll*koff),gam, kon*Nt/koff), DF, D/(koff));
@@ -51,6 +53,7 @@ end
 
 
 %% Flux ratio vs koff at several affinities (koff and KD independent)
+% THIS ONE FOR ACTUAL PAPER FIGURE!
 % For Fig. 2 of paper (flexible linker form of DB used)
 % Does not incorporate koff2 (sliding koff)
 
@@ -78,7 +81,7 @@ flux_ratio(x,y) = flux_final(x,y)/flux_no_binding;
 close all
 
 % Make an x-axis for the plot (do not start at zero; it gets mad).
-x_axis = logspace(-2,2);
+x_axis = logspace(-2,3);
 
 close all
 FigHandle = figure;

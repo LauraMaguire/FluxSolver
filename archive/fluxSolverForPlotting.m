@@ -171,7 +171,7 @@ Nt_n = 10^3; %total nup concentration in uM
 Abound_n = 1; % 1 % free NTR at left boundary in uM (upper bound)
 L_n = 100; % nm, length of pore
 D_n = 1; %nm^/us INSIDE THE PORE
-ll_n = 250; % nm^2 (1 nm)*(countour length, 1 ammino acid is roughly 1 nm).
+ll_n = 100; % nm^2 (1 nm)*(countour length, 1 ammino acid is roughly 1 nm).
 
 % Clear and define dummy variables for plotting.
 clear x y
