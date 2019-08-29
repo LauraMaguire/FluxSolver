@@ -1,4 +1,4 @@
-function [kon_range, koff_values, selectivity, absFlux] = LinearSelVsKon()
+function [kon_range, koff_values, selectivity, absFlux] = LinearSelAndFluxVsKon()
 % This function solves the binding-diffusion equations in the linear
 % approximation and plots selectivity (flux ratio of a binding to
 % non-binding species) as a function of on-rate k_on.  No

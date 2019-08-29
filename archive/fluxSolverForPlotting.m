@@ -167,10 +167,10 @@ flux_2 = simplify(flux_1(0));
 syms Nt D
 
 % Set variables to reasonable values (SI units but in us, nm, and uM).
-Nt_n = 10^3; %total nup concentration in uM
+Nt_n = 4.7e3; %total nup concentration in uM
 Abound_n = 1; % 1 % free NTR at left boundary in uM (upper bound)
 L_n = 100; % nm, length of pore
-D_n = 1; %nm^/us INSIDE THE PORE
+D_n = 0.12; %nm^/us INSIDE THE PORE
 ll_n = 100; % nm^2 (1 nm)*(countour length, 1 ammino acid is roughly 1 nm).
 
 % Clear and define dummy variables for plotting.
